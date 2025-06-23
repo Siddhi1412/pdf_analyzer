@@ -4,7 +4,7 @@ from textblob import TextBlob
 from langdetect import detect
 from translate import Translator
 import nltk
-nltk.data.path.append("./tokenizers")
+nltk.data.path.append(".")  # ✅ Point to the parent directory of 'tokenizers'
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 import os
