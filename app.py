@@ -7,12 +7,10 @@ import nltk
 import os
 import io
 
-# Download required NLTK data on startup (safe for Render)
-# nltk.download('punkt')
-# nltk.download('stopwords')
-
-# ✅ Corrected line
-nltk.data.path.insert(0, os.path.join(os.path.dirname(__file__), 'tokenizers'))
+# ✅ Download required NLTK data for deployment
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('punkt_tab')  # 🔥 Fix for new error
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
