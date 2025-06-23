@@ -1,0 +1,7 @@
+Flask
+PyMuPDF
+textblob
+nltk
+langdetect
+translate
+gunicorn
