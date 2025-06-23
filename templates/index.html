@@ -120,6 +120,11 @@
             <!-- 📊 Chart -->
             <canvas id="chart-{{ loop.index }}" width="600" height="300" style="margin-top: 30px;"></canvas>
         {% endfor %}
+
+        <!-- ⬇️ Download All Summaries -->
+        <a href="{{ url_for('download_summary') }}" class="btn btn-primary" style="margin-top: 30px; display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+            ⬇️ Download All Summaries
+        </a>
     {% endif %}
 
     <!-- 🔝 Back to Top -->
