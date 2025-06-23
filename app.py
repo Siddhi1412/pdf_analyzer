@@ -4,14 +4,17 @@ from textblob import TextBlob
 from langdetect import detect
 from translate import Translator
 import nltk
-nltk.data.path.append(".")  # ✅ Point to the parent directory of 'tokenizers'
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk.corpus import stopwords
 import os
 import io
 
+# 🔧 Force NLTK to look in the local project tokenizer folder first
+nltk.data.path.insert(0, os.path.join(os.path.dirname(_file_), 'tokenizers'))
+
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
+
 # Flask app setup
-app = Flask(__name__)
+app = Flask(_name_)
 app.secret_key = 'siddhi-secret-key'
 
 # Upload folder
@@ -105,5 +108,5 @@ def extract_text(path):
     doc = fitz.open(path)
     return "\n".join(page.get_text() for page in doc)
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(debug=True)
