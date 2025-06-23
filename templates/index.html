@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+        }
+
+        body.dark-mode {
+            --bg: #121212;
+            --text: #f0f0f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        .summary-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .summary-box {
+            background: #1e1e1e;
+            border-color: #444;
+        }
+
+        #topBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: none;
+        }
+
+        #darkToggle {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 6px solid #ccc;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 🌙 Dark Mode Toggle -->
+    <button id="darkToggle" onclick="toggleDarkMode()">🌗 Toggle Mode</button>
+
+    <h2>Upload PDF(s)</h2>
+    <form method="POST" enctype="multipart/form-data" onsubmit="showLoader()">
+        <input type="file" name="pdfs" multiple required>
+        <button type="submit">Analyze</button>
+    </form>
+
+    <!-- 🔄 Loader -->
+    <div id="loader" class="loader" style="display:none;"></div>
+
+    {% if results %}
+        {% for data in results %}
+            <hr>
+            <h3>Results for: <i>{{ data.filename }}</i></h3>
+
+            <p><b>Detected Language:</b> {{ data.language | upper }}</p>
+            <p><b>Word Count:</b> {{ data.word_count }}</p>
+
+            <p><b>Top Keywords:</b></p>
+            {% if data.top_keywords %}
+                <ul>
+                    {% for word, count in data.top_keywords %}
+                        <li>{{ word }}: {{ count }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No significant keywords found.</p>
+            {% endif %}
+
+            <p><b>Summary:</b></p>
+            <div class="summary-box">{{ data.summary }}</div>
+
+            <!-- 🔊 Speak Summary -->
+            <button onclick="speakSummary(`{{ data.summary | escape | safe }}`)">🔊 Speak Summary</button>
+
+            <p><b>Sentiment:</b> {{ data.sentiment }}</p>
+
+            <!-- 📊 Chart -->
+            <canvas id="chart-{{ loop.index }}" width="600" height="300" style="margin-top: 30px;"></canvas>
+        {% endfor %}
+    {% endif %}
+
+    <!-- 🔝 Back to Top -->
+    <button onclick="topFunction()" id="topBtn">🔝 Top</button>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JS Section -->
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+
+        function speakSummary(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(msg);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+
+        const topBtn = document.getElementById("topBtn");
+        window.onscroll = function() {
+            topBtn.style.display = (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) ? "block" : "none";
+        };
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        // 📊 Render charts dynamically
+        {% for data in results %}
+        const keywords{{ loop.index }} = {{ data.top_keywords | map(attribute=0) | list | tojson | safe }};
+        const counts{{ loop.index }} = {{ data.top_keywords | map(attribute=1) | list | tojson | safe }};
+        const ctx{{ loop.index }} = document.getElementById('chart-{{ loop.index }}').getContext('2d');
+
+        new Chart(ctx{{ loop.index }}, {
+            type: 'bar',
+            data: {
+                labels: keywords{{ loop.index }},
+                datasets: [{
+                    label: 'Keyword Frequency',
+                    data: counts{{ loop.index }},
+                    backgroundColor: '#ff9800'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Top 10 Keywords for {{ data.filename }}' }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+        {% endfor %}
+    </script>
+</body>
+</html>

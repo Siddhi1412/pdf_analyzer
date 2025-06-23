@@ -1,0 +1,83 @@
+/* Base Dark Theme */
+body {
+    background-color: #121212;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 30px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+h2, h3 {
+    color: #ffa500;
+}
+
+input[type="file"] {
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #1e1e1e;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+button {
+    padding: 10px 18px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #e68900;
+}
+
+/* Summary and Result Display */
+.summary-box {
+    background-color: #1f1f1f;
+    padding: 15px;
+    border-left: 4px solid #ff9800;
+    margin: 15px 0;
+    border-radius: 8px;
+}
+
+/* Chart */
+canvas {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Loader */
+.loader {
+    border: 8px solid #333;
+    border-top: 8px solid #ff9800;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* List Styling */
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+/* Audio player spacing */
+audio {
+    margin-top: 10px;
+}
