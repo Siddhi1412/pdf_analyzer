@@ -1,8 +1,4 @@
-Absolutely! Here's a clean, properly formatted `README.md` for your **PDF Analyzer** project. You can copy this **entire block** and paste it directly into your GitHub repository's README file.
 
----
-
-```markdown
 # 📄 PDF Analyzer: Smart Text Extraction & Summarization Tool
 
 This is a Flask-based web application that allows users to upload PDF files and get detailed text analysis including keyword extraction, sentiment analysis, language detection, and summarized output. Ideal for anyone needing quick insights from document content.
